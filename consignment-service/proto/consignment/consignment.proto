@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+// There are two libraries at work here, 
+// - messages are handled by protobuf, 
+// - the service we defined is handled by a gRPC protobuf plugin, which compiles code to interact with these types, 
+//   i.e the service part of our proto file.
+
+// defining the service; this should contain the methods that you wish to expose to other services
+package go.micro.srv.consignment; 
+
+service ShippingService {
+  rpc CreateConsignment(Consignment) returns (Response) {}
+
+  rpc GetConsignments(GetRequest) returns (Response) {}
+}
+
+// defining the message types; these are effectively the data structure
+message Consignment {
+  string id = 1;
+  string description = 2;
+  int32 weight = 3;
+  repeated Container containers = 4;
+  string vessel_id = 5;
+}
+
+message Container {
+  string id = 1;
+  string customer_id = 2;
+  string origin = 3;
+  string user_id = 4;
+}
+
+message GetRequest {}
+
+message Response {
+  bool created = 1;
+  Consignment consignment = 2;
+
+  repeated Consignment consignments = 3;
+}
